@@ -5,7 +5,7 @@
 	var artistTitles = [];
 	var settings;
 	var page = 0;
-	var timer = undefined;
+	var timer;
 	jQuery.fn.lastfm = function(options) {
 		var defaults = {
 			username: 'huntinggirled',
@@ -56,16 +56,16 @@
 			}
 			,printContent: function(elem, item) {
 				var thisElem = elem;
-				if(item==undefined) return false;
-				var art = (item.image!=undefined && item.image[0]['#text']!=undefined && item.image[0]['#text']!='')?eachfuncs.stripSlashes(item.image[0]['#text']):'http://girled.net/js/lastfm/noimg_lfm.gif'
-				,url = (eachfuncs.stripSlashes(item.url)!=undefined)?eachfuncs.stripSlashes(item.url):"http://girled.net/"
-				,song = (item.name!=undefined)?item.name:"unknown title"
-				,artist = (item.artist!=undefined && item.artist['#text']!=undefined)?item.artist['#text']:"unknown artist"
-				,album = (item.album!=undefined && item.album['#text']!=undefined)?item.album['#text']:"unknown album"
-				,date = (item.date!=undefined)?item.date['#text']:""
-				,utsstr = (item.date!=undefined && item.date.uts!=undefined)?eachfuncs.relativeTime(item.date.uts):""
-				,nowplaying = (item['@attr']!=undefined && item['@attr'].nowplaying!=undefined)?"<img src=\"http://girled.net/js/lastfm/eq.gif\" alt=\"再生中\" width=\"12\" height=\"12\" /> 再生中":""
-				,datetime = (item.date!=undefined && item.date.uts!=undefined)?item.date.uts:parseInt(new Date().getTime()/1000)
+				if(item==null) return false;
+				var art = (item.image!=null && item.image[0]['#text']!=null && item.image[0]['#text']!='')?eachfuncs.stripSlashes(item.image[0]['#text']):'http://girled.net/js/lastfm/noimg_lfm.gif'
+				,url = (eachfuncs.stripSlashes(item.url)!=null)?eachfuncs.stripSlashes(item.url):"http://girled.net/"
+				,song = (item.name!=null)?item.name:"unknown title"
+				,artist = (item.artist!=null && item.artist['#text']!=null)?item.artist['#text']:"unknown artist"
+				,album = (item.album!=null && item.album['#text']!=null)?item.album['#text']:"unknown album"
+				,date = (item.date!=null)?item.date['#text']:""
+				,utsstr = (item.date!=null && item.date.uts!=null)?eachfuncs.relativeTime(item.date.uts):""
+				,nowplaying = (item['@attr']!=null && item['@attr'].nowplaying!=null)?"<img src=\"http://girled.net/js/lastfm/eq.gif\" alt=\"再生中\" width=\"12\" height=\"12\" /> 再生中":""
+				,datetime = (item.date!=null && item.date.uts!=null)?item.date.uts:parseInt(new Date().getTime()/1000)
 				;
 				var thisIndex = artistTitles.length;
 				artistTitles[thisIndex] = new Array(artist, song);
@@ -117,25 +117,28 @@
 						dataType: 'jsonp',
 						callback: 'callback',
 						timeout: 5000,
-						success: function(data, status) {
-							if(data==undefined || data.recenttracks==undefined) {
-								jQuery('#more_track').empty();
-								return false;
-							}
-							if(thisPage==0 || thisPage==1) items = [];
-							items = items.concat(data.recenttracks.track);
-							if(thisPage==1) items.splice(0, settings.default_count);
-							if(thisPage==0) thisElem.empty();
-							thisElem.append('<div class="track" style="opacity:0.0;" />');
-							var trackElem = thisElem.children('.track:last');
-							eachfuncs.shiftItems(trackElem);
-							page++;
-						},
-						error: function(XHR, status, errorThrown) {
-							eachfuncs.elapsedTime(thisElem);
+					})
+					.done(function(data, status) {
+						if(data==null || data.recenttracks==null) {
 							jQuery('#more_track').empty();
+							return false;
 						}
-					});
+						if(thisPage==0 || thisPage==1) items = [];
+						items = items.concat(data.recenttracks.track);
+						if(thisPage==1) items.splice(0, settings.default_count);
+						if(thisPage==0) thisElem.empty();
+						thisElem.append('<div class="track" style="opacity:0.0;" />');
+						var trackElem = thisElem.children('.track:last');
+						eachfuncs.shiftItems(trackElem);
+						page++;
+					})
+					.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+						eachfuncs.elapsedTime(thisElem);
+						jQuery('#more_track').empty();
+					})
+					.always(function(XMLHttpRequest, textStatus) {
+					})
+					;
 				}
 			}
 		}
@@ -143,7 +146,7 @@
 		var thisElem = jQuery(this);
 		eachfuncs.eachThis(thisElem);
 		var dTime = new Date().getTime();
-		if(timer!=undefined) clearInterval(timer);
+		if(timer!=null) clearInterval(timer);
 		timer = setInterval(function() {
 			if(dTime+settings.reload < (new Date().getTime())) {
 				page = 0;
@@ -164,17 +167,17 @@
 				var thisPage = thisElem.children('.alist').children('.apage:last');
 				thisPage.css('opacity', 0.0).fadeTo('normal', 1.0);
 				var resultArtistTitles = [];
-				if(data.result.Item==undefined) return false;
-				if(data.result.Item.length!=undefined) resultArtistTitles = data.result.Item;
+				if(data.result.Item==null) return false;
+				if(data.result.Item.length!=null) resultArtistTitles = data.result.Item;
 				else resultArtistTitles[0] = data.result.Item;
 				return jQuery.each(resultArtistTitles, function(i, item){
 					var name = item.ItemAttributes.Title
 					,artist = item.ItemAttributes.Artist
 					,url = item.DetailPageURL
 					,image = item.SmallImage ? item.SmallImage.URL : ''
-					,artistName = (artist!=undefined)?artist+" - "+name:name
+					,artistName = (artist!=null)?artist+" - "+name:name
 					;
-					if(image==undefined || image=="") image = "http://girled.net/js/lastfm/noimg_ama.gif";
+					if(image==null || image=="") image = "http://girled.net/js/lastfm/noimg_ama.gif";
 					thisPage.append(
 						'<a href="'+decodeURIComponent(url)+'" title="'+artistName+'" target="_blank">'
 						+'<img src="'+image+'" class="widget-img-thumb" alt="'+artistName+'" />'
@@ -196,12 +199,17 @@
 			data: params,
 			dataType: 'jsonp',
 			callback: 'callback',
-			timeout: 2000,
-			success: function(data, status) {
-				amazon.productSearchComplete(data, thisElem, pageNum);
-			},
-			error: function(XHR, status, errorThrown) {thisElem.children('.ainfo').empty();}
-		});
+			timeout: 5000,
+		})
+		.done(function(data, status) {
+			amazon.productSearchComplete(data, thisElem, pageNum);
+		})
+		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+			thisElem.children('.ainfo').empty();
+		})
+		.always(function(XMLHttpRequest, textStatus) {
+		})
+		;
 		return thisElem;
 	}
 })(jQuery);

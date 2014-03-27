@@ -4,7 +4,7 @@
 	var items = [];
 	var settings;
 	var page = 0;
-	var timer = undefined;
+	var timer;
 	jQuery.fn.twitter = function(options) {
 		var defaults = {
 			screen_name: 'huntinggirled',
@@ -55,20 +55,20 @@
 						return Date.parse(time_value);
 					}
 				}
-				if(item==undefined || item.user==undefined) return false;
+				if(item==null || item.user==null) return false;
 				var id_str = item.id_str
 				,utc_offset = item.utc_offset
-				,screen_name = (item.user.screen_name!=undefined)?item.user.screen_name:'screen_name'
-				,name = (item.user.name!=undefined)?item.user.name:'name'
-				,profile_image = (item.user.profile_image_url!=undefined)?utils.stripSlashes(item.user.profile_image_url):"http://girled.net/js/twitter/noimg.png"
+				,screen_name = (item.user.screen_name!=null)?item.user.screen_name:'screen_name'
+				,name = (item.user.name!=null)?item.user.name:'name'
+				,profile_image = (item.user.profile_image_url!=null)?utils.stripSlashes(item.user.profile_image_url):"http://girled.net/js/twitter/noimg.png"
 				,created_at = utils.relativeTime(item.created_at)
 				,tweet_text = utils.replaceLink(item.text)
 				,datetime = utils.getDatetime(item.created_at)
 				;
-				if(item.retweeted_status!=undefined) {
+				if(item.retweeted_status!=null) {
 					screen_name = item.retweeted_status.user.screen_name
 					,name = item.retweeted_status.user.name
-					,profile_image = (item.retweeted_status.user.profile_image_url!=undefined)?utils.stripSlashes(item.retweeted_status.user.profile_image_url):"http://girled.net/js/twitter/noimg.png"
+					,profile_image = (item.retweeted_status.user.profile_image_url!=null)?utils.stripSlashes(item.retweeted_status.user.profile_image_url):"http://girled.net/js/twitter/noimg.png"
 					,created_at = utils.relativeTime(item.retweeted_status.created_at)
 					,tweet_text = utils.replaceLink(item.retweeted_status.text)
 					,datetime = utils.getDatetime(item.retweeted_status.created_at)
@@ -148,25 +148,28 @@
 						dataType: 'jsonp',
 						callback: 'twitterCallback',
 						timeout: 5000,
-						success: function(data, status, xhr) {
-							if((page-1)==0 || (page-1)==1) items = [];
-							items = items.concat(data);
-							if((page-1)==1) items.splice(0, settings.default_count);
-							if((page-1)==0) thisElem.empty();
-							eachfuncs.shiftItems(thisElem);
-						},
-						error: function(XMLHttpRequest, status, errorThrown) {
-							eachfuncs.elapsedTime(thisElem);
-							jQuery('#more_tweet').empty();
-						}
-					});
+					})
+					.done(function(data, status) {
+						if((page-1)==0 || (page-1)==1) items = [];
+						items = items.concat(data);
+						if((page-1)==1) items.splice(0, settings.default_count);
+						if((page-1)==0) thisElem.empty();
+						eachfuncs.shiftItems(thisElem);
+					})
+					.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+						eachfuncs.elapsedTime(thisElem);
+						jQuery('#more_tweet').empty();
+					})
+					.always(function(XMLHttpRequest, textStatus) {
+					})
+					;
 				}
 			}
 		}
 		var thisElem = jQuery(this);
 		eachfuncs.eachThis(thisElem);
 		var dTime = new Date().getTime();
-		if(timer!=undefined) clearInterval(timer);
+		if(timer!=null) clearInterval(timer);
 		timer = setInterval(function() {
 			if(dTime+settings.reload < (new Date().getTime())) {
 				page = 0;
