@@ -1,28 +1,29 @@
 'use strict';
-
-(function(jQuery){
+(function($){
 	var items = [];
 	var settings;
 	var page = 0;
 	var timer;
-	jQuery.fn.twitter = function(options) {
+	var locationHostArrayReverse = location.host.split('.').reverse();
+	var locationHost = locationHostArrayReverse[1]+"."+locationHostArrayReverse[0];
+	$.fn.twitter = function(options) {
 		var defaults = {
-			screen_name: 'huntinggirled',
-			default_count: 1,
-			page_count: 5,
-			read_count: 50,
-			interval: 1000,
-			reload: 600000,
+			screen_name: 'huntinggirled'
+			,default_count: 1
+			,page_count: 5
+			,read_count: 50
+			,interval: 1000
+			,reload: 600000
 		};
-		settings = jQuery.extend({}, defaults, options);
+		settings = $.extend({}, defaults, options);
 		if(settings.default_count>settings.page_count) settings.page_count = settings.default_count;
 		if(settings.page_count>settings.read_count) settings.read_count = settings.page_count;
-		var thisElem = jQuery(this);
+		var thisElem = $(this);
 		thisElem.after('<div id="more_tweet" />');
 		thisElem.getTimeline();
 	}
 
-	jQuery.fn.getTimeline = function() {
+	$.fn.getTimeline = function() {
 		var eachfuncs = {
 			printTweet: function(elem, item) {
 				var utils = {
@@ -60,7 +61,7 @@
 				,utc_offset = item.utc_offset
 				,screen_name = (item.user.screen_name!=null)?item.user.screen_name:'screen_name'
 				,name = (item.user.name!=null)?item.user.name:'name'
-				,profile_image = (item.user.profile_image_url!=null)?utils.stripSlashes(item.user.profile_image_url):"http://girled.net/js/twitter/noimg.png"
+				,profile_image = (item.user.profile_image_url!=null)?utils.stripSlashes(item.user.profile_image_url):"http://"+locationHost+"/js/twitter/noimg.png"
 				,created_at = utils.relativeTime(item.created_at)
 				,tweet_text = utils.replaceLink(item.text)
 				,datetime = utils.getDatetime(item.created_at)
@@ -68,7 +69,7 @@
 				if(item.retweeted_status!=null) {
 					screen_name = item.retweeted_status.user.screen_name
 					,name = item.retweeted_status.user.name
-					,profile_image = (item.retweeted_status.user.profile_image_url!=null)?utils.stripSlashes(item.retweeted_status.user.profile_image_url):"http://girled.net/js/twitter/noimg.png"
+					,profile_image = (item.retweeted_status.user.profile_image_url!=null)?utils.stripSlashes(item.retweeted_status.user.profile_image_url):"http://"+locationHost+"/js/twitter/noimg.png"
 					,created_at = utils.relativeTime(item.retweeted_status.created_at)
 					,tweet_text = utils.replaceLink(item.retweeted_status.text)
 					,datetime = utils.getDatetime(item.retweeted_status.created_at)
@@ -93,8 +94,8 @@
 					+'</div>'
 				);
 				elem.children('.one_tweet:last').hover(
-					function() {jQuery(this).children('.reply').fadeTo('normal', 1.0);}
-					,function() {jQuery(this).children('.reply').fadeTo('normal', 0.2);}
+					function() {$(this).children('.reply').fadeTo('normal', 1.0);}
+					,function() {$(this).children('.reply').fadeTo('normal', 0.2);}
 				);
 			}
 			,relativeTime: function(str) {
@@ -114,9 +115,9 @@
 			}
 			,elapsedTime: function(elem) {
 				return elem.find('.ctime').each(function() {
-					var ptime = jQuery(this).html();
-					var etime = eachfuncs.relativeTime(jQuery(this).data('datetime'));
-					if(ptime!=etime) jQuery(this).css('opacity', 0.0).html(etime).fadeTo('normal', 1.0);
+					var ptime = $(this).html();
+					var etime = eachfuncs.relativeTime($(this).data('datetime'));
+					if(ptime!=etime) $(this).css('opacity', 0.0).html(etime).fadeTo('normal', 1.0);
 				});
 			}
 			,shiftItems: function(elem) {
@@ -128,26 +129,26 @@
 					if(items.length<=0) break;
 				}
 				eachfuncs.elapsedTime(thisElem);
-				jQuery('#more_tweet').empty().append('<div style="text-align:right;"><a href="" onmouseover="jQuery(\'#twitter\').getTimeline();return false;">[さらに読み込む]</a></div>');
+				$('#more_tweet').empty().append('<div style="text-align:right;"><a href="" onmouseover="$(\'#twitter\').getTimeline();return false;">[さらに読み込む]</a></div>');
 			}
 			,eachThis: function(elem) {
 				var thisElem = elem;
-				jQuery('#more_tweet').empty().append('<div style="text-align:right;"><img src="http://girled.net/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
+				$('#more_tweet').empty().append('<div style="text-align:right;"><img src="http://'+locationHost+'/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
 				if(page>=1 && items.length>=settings.page_count) eachfuncs.shiftItems(thisElem);
 				else {
 					var params = {
-						screen_name: settings.screen_name,
-						count: (page==0)?settings.default_count:settings.read_count,
-						page: (page==0)?++page:page++,
-						include_rts: true,
+						screen_name: settings.screen_name
+						,count: (page==0)?settings.default_count:settings.read_count
+						,page: (page==0)?++page:page++
+						,include_rts: true
 					}
-					jQuery.ajax({
-					//	url: 'http://api.twitter.com/1/statuses/user_timeline.json',
-						url: 'http://girled.net/js/twitter/twittergw.php',
-						data: params,
-						dataType: 'jsonp',
-						callback: 'twitterCallback',
-						timeout: 5000,
+					$.ajax({
+					//	url: 'http://api.twitter.com/1/statuses/user_timeline.json'
+						url: 'http://'+locationHost+'/js/twitter/twittergw.php'
+						,data: params
+						,dataType: 'jsonp'
+						,callback: 'twitterCallback'
+						,timeout: 5000
 					})
 					.done(function(data, status) {
 						if((page-1)==0 || (page-1)==1) items = [];
@@ -158,7 +159,7 @@
 					})
 					.fail(function(XMLHttpRequest, textStatus, errorThrown) {
 						eachfuncs.elapsedTime(thisElem);
-						jQuery('#more_tweet').empty();
+						$('#more_tweet').empty();
 					})
 					.always(function(XMLHttpRequest, textStatus) {
 					})
@@ -166,7 +167,7 @@
 				}
 			}
 		}
-		var thisElem = jQuery(this);
+		var thisElem = $(this);
 		eachfuncs.eachThis(thisElem);
 		var dTime = new Date().getTime();
 		if(timer!=null) clearInterval(timer);
