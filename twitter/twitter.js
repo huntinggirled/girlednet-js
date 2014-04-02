@@ -1,5 +1,5 @@
-'use strict';
 (function($){
+	'use strict';
 	var items = [];
 	var settings;
 	var page = 0;
