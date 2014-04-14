@@ -112,11 +112,11 @@
 						,format: 'json'
 					};
 					return $.ajax({
-						url: 'http://ws.audioscrobbler.com/2.0/',
-						data: params,
-						dataType: 'jsonp',
-						callback: 'callback',
-						timeout: 5000,
+						url: 'http://ws.audioscrobbler.com/2.0/'
+						,data: params
+						,dataType: 'jsonp'
+						,callback: 'callback'
+						,timeout: 5000
 					})
 					.done(function(data, status) {
 						if(data==null || data.recenttracks==null) {
