@@ -133,7 +133,7 @@
 			}
 			,eachThis: function(elem) {
 				var thisElem = elem;
-				$('#more_tweet').empty().append('<div style="text-align:right;"><img src="http://'+locationHost+'/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
+				$('#more_tweet').empty().append('<div style="text-align:right;"><img src="http://'+locationHost+'/js/twitter/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
 				if(page>=1 && items.length>=settings.page_count) eachfuncs.shiftItems(thisElem);
 				else {
 					var params = {

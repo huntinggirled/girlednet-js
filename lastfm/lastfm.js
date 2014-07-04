@@ -96,7 +96,7 @@
 			}
 			,eachThis: function(elem) {
 				var thisElem = elem;
-				$('#more_track').empty().append('<div style="text-align:right;"><img src="http://'+locationHost+'/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
+				$('#more_track').empty().append('<div style="text-align:right;"><img src="http://'+locationHost+'/js/lastfm/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
 				var thisPage = page;
 				if(thisPage>=1 && items.length>=settings.page_count) {
 					thisElem.append('<div class="track" style="opacity:0.0;" />');
@@ -186,7 +186,7 @@
 			}
 		}
 		var thisElem = $(this);
-		thisElem.children('.ainfo').empty().append('<img src="http://'+locationHost+'/indi.gif" alt="商品検索中..." width="10" height="10" /> 商品検索中...');
+		thisElem.children('.ainfo').empty().append('<img src="http://'+locationHost+'/js/lastfm/indi.gif" alt="商品検索中..." width="10" height="10" /> 商品検索中...');
 		var params = {
 			'search_index': 'Music'
 			,'artist': artistTitles[trackNum][0]
