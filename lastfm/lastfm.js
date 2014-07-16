@@ -72,7 +72,7 @@
 				thisElem.append(
 					'<div id="atrack-'+thisIndex+'" style="clear:both;">'
 					+'<div class="ctime" data-datetime="'+datetime+'">'+nowplaying+utsstr+'</div>'
-					+'<a href="'+url+'" title="'+artist+' - '+song+'" target="_blank"><img src="'+art+'" class="widget-img-thumb" alt="'+artist+' - '+song+'" onerror="this.src=(\'http://'+locationHost+'/js/lastfm/noimag_lfm.gif\')" /></a>'
+					+'<a href="'+url+'" title="'+artist+' - '+song+'" target="_blank"><img src="'+art+'" class="widget-img-thumb" alt="'+artist+' - '+song+'" onerror="this.src=(\'http://'+locationHost+'/js/lastfm/noimg_lfm.gif\')" /></a>'
 					+'<a href="'+url+'" title="'+artist+' - '+song+'" target="_blank">'+((song.length>32)?song.slice(0, 32)+'...':song)+'</a><br />'
 					+'<a href="'+url+'" title="'+artist+' - '+song+'" target="_blank">'+((artist.length>32)?artist.slice(0, 32)+'...':artist)+'</a>'
 					//+album
