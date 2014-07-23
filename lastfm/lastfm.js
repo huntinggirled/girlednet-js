@@ -194,7 +194,7 @@
 			,'item_page': pageNum
 		};
 		$.ajax({
-			url: 'http://'+locationHost+'/js/lastfm/amazon/request.php'
+			url: 'http://'+locationHost+'/amazon/request.php'
 			,data: params
 			,dataType: 'jsonp'
 			,callback: 'callback'
