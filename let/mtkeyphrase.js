@@ -4,6 +4,7 @@
 	var locationHostArrayReverse = location.host.split('.').reverse();
 	var locationHost = locationHostArrayReverse[1]+"."+locationHostArrayReverse[0];
 	var sentence = $('#editor-input-content').text().replace(/<("[^"]*"|'[^']*'|[^'">])*>/g,'').replace(/girled/g, '');
+	sentence = $('<div>').html(sentence).text();
 	var title = $('#title').val().replace(/\s+(\([0-9]+\))$/g,'');
 	var params = {
 		'sentence': sentence
@@ -19,11 +20,13 @@
 	.done(function(data, status) {
 		$.each(data, function(key, val){
 			if(title.length<titlemaxlength) {
-				var keyphrase = key.replace(/\\(\'|\"|\\)/g,'$1');
-				title = title+" "+keyphrase;
+				if(!key.match(/^[0-9a-z]{8,9}$/i) || confirm(key+"を適用しますか？")){
+					title = title+" "+key.replace(/\\(\'|\"|\\)/g,'$1');
+				}
 			}
 		});
 		$('#title').val(title);
+		$('.publish').trigger("click");
 	})
 	.fail(function(XMLHttpRequest, textStatus, errorThrown) {
 	})
