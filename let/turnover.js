@@ -29,8 +29,9 @@
 	}
 	t=(ll-ul)/ll*100;
 	log+="全体の離職率: "+t.toFixed(2)+"%"+"\n";
-	t=(yl-yc)/yl*100;
-	log+="役員の離職率: "+t.toFixed(2)+"%"+"\n";
+console.log(yc+" "+yl);
+	t=yc/yl*100;
+	log+="取締役の離職率: "+t.toFixed(2)+"%"+"\n";
 	console.log(log);
 	alert(log);
 })();
