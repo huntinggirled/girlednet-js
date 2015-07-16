@@ -159,8 +159,10 @@
 		var amazon = {
 			productSearchComplete: function(data, elem, pageNum) {
 				var thisElem = elem;
-				var total_results = (data.result.TotalResults>=100)?100:data.result.TotalResults;
-				if(total_results-(pageNum*10)>0) thisElem.children('.ainfo').empty().append('<a href="" onclick="$(this).closest(\'#atrack-'+trackNum+'\').productSearch('+trackNum+', '+(pageNum+1)+');return false;">[検索結果あと'+(total_results-(pageNum*10))+'件]</a>');
+				var totalResult = 100;
+				var onePageNum = 10;
+				var total_results = (data.result.TotalResults>=totalResult)?totalResult:data.result.TotalResults;
+				if(total_results-(pageNum*onePageNum)>0) thisElem.children('.ainfo').empty().append('<a href="" onclick="$(this).closest(\'#atrack-'+trackNum+'\').productSearch('+trackNum+', '+(pageNum+1)+');return false;">[検索結果あと'+(total_results-(pageNum*onePageNum))+'件]</a>');
 				else thisElem.children('.ainfo').empty();
 				thisElem.children('.alist').append('<div class="apage" />');
 				var thisPage = thisElem.children('.alist').children('.apage:last');
@@ -181,7 +183,7 @@
 						'<a href="'+decodeURIComponent(url)+'" title="'+artistName+'" target="_blank">'
 						+'<img src="'+image+'" class="widget-img-thumb" alt="'+artistName+'" />'
 						+'</a>'
-					);	
+					);
 				});
 			}
 		}
