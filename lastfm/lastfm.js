@@ -33,9 +33,9 @@
 				var delta = relative_to-parsed_date;
 				if(delta<60) {
 				//	return delta.toString()+'秒前';
-					return "<img src=\"http://"+locationHost+"/js/lastfm/eq.gif\" alt=\"再生中\" width=\"12\" height=\"12\" /> 再生中";
+					return "<img src=\"https://"+locationHost+"/js/lastfm/eq.gif\" alt=\"再生中\" width=\"12\" height=\"12\" /> 再生中";
 				} else if(delta<(60*3)) {
-					return "<img src=\"http://"+locationHost+"/js/lastfm/eq.gif\" alt=\"再生中\" width=\"12\" height=\"12\" /> 再生中";
+					return "<img src=\"https://"+locationHost+"/js/lastfm/eq.gif\" alt=\"再生中\" width=\"12\" height=\"12\" /> 再生中";
 				} else if(delta<(60*60)) {
 					return (parseInt(delta/60)).toString() + '分前';
 				} else if(delta<(24*60*60)) {
@@ -57,14 +57,14 @@
 			,printContent: function(elem, item) {
 				var thisElem = elem;
 				if(item==null) return false;
-				var art = (item.image!=null && item.image[0]['#text']!=null && item.image[0]['#text']!='')?eachfuncs.stripSlashes(item.image[0]['#text']):'http://'+locationHost+'/js/lastfm/noimg_lfm.gif'
-				,url = (eachfuncs.stripSlashes(item.url)!=null)?eachfuncs.stripSlashes(item.url):"http://"+locationHost+"/"
+				var art = (item.image!=null && item.image[0]['#text']!=null && item.image[0]['#text']!='')?eachfuncs.stripSlashes(item.image[0]['#text']):'https://'+locationHost+'/js/lastfm/noimg_lfm.gif'
+				,url = (eachfuncs.stripSlashes(item.url)!=null)?eachfuncs.stripSlashes(item.url):"https://"+locationHost+"/"
 				,song = (item.name!=null)?item.name:"unknown title"
 				,artist = (item.artist!=null && item.artist['#text']!=null)?item.artist['#text']:"unknown artist"
 				,album = (item.album!=null && item.album['#text']!=null)?item.album['#text']:"unknown album"
 				,date = (item.date!=null)?item.date['#text']:""
 				,utsstr = (item.date!=null && item.date.uts!=null)?eachfuncs.relativeTime(item.date.uts):""
-				,nowplaying = (item['@attr']!=null && item['@attr'].nowplaying!=null)?"<img src=\"http://"+locationHost+"/js/lastfm/eq.gif\" alt=\"再生中\" width=\"12\" height=\"12\" /> 再生中":""
+				,nowplaying = (item['@attr']!=null && item['@attr'].nowplaying!=null)?"<img src=\"https://"+locationHost+"/js/lastfm/eq.gif\" alt=\"再生中\" width=\"12\" height=\"12\" /> 再生中":""
 				,datetime = (item.date!=null && item.date.uts!=null)?item.date.uts:parseInt(new Date().getTime()/1000)
 				;
 				var thisIndex = artistTitles.length;
@@ -72,7 +72,7 @@
 				thisElem.append(
 					'<div id="atrack-'+thisIndex+'" style="clear:both;">'
 					+'<div class="ctime" data-datetime="'+datetime+'">'+nowplaying+utsstr+'</div>'
-					+'<a href="'+url+'" title="'+artist+' - '+song+'" target="_blank"><img src="'+art+'" class="widget-img-thumb" alt="'+artist+' - '+song+'" onerror="this.src=(\'http://'+locationHost+'/js/lastfm/noimg_lfm.gif\')" /></a>'
+					+'<a href="'+url+'" title="'+artist+' - '+song+'" target="_blank"><img src="'+art+'" class="widget-img-thumb" alt="'+artist+' - '+song+'" onerror="this.src=(\'https://'+locationHost+'/js/lastfm/noimg_lfm.gif\')" /></a>'
 					+'<a href="'+url+'" title="'+artist+' - '+song+'" target="_blank">'+((song.length>32)?song.slice(0, 32)+'...':song)+'</a><br />'
 					+'<a href="'+url+'" title="'+artist+' - '+song+'" target="_blank">'+((artist.length>32)?artist.slice(0, 32)+'...':artist)+'</a>'
 					//+album
@@ -96,7 +96,7 @@
 			}
 			,eachThis: function(elem) {
 				var thisElem = elem;
-				$('#more_track').empty().append('<div style="text-align:right;"><img src="http://'+locationHost+'/js/lastfm/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
+				$('#more_track').empty().append('<div style="text-align:right;"><img src="https://'+locationHost+'/js/lastfm/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
 				var thisPage = page;
 				if(thisPage>=1 && items.length>=settings.page_count) {
 					thisElem.append('<div class="track" style="opacity:0.0;" />');
@@ -112,7 +112,7 @@
 						,format: 'json'
 					};
 					return $.ajax({
-						url: 'http://ws.audioscrobbler.com/2.0/'
+						url: 'https://ws.audioscrobbler.com/2.0/'
 						,data: params
 						,dataType: 'jsonp'
 						,callback: 'callback'
@@ -178,7 +178,7 @@
 					,image = item.SmallImage ? item.SmallImage.URL : ''
 					,artistName = (artist!=null)?artist+" - "+name:name
 					;
-					if(image==null || image=="") image = "http://"+locationHost+"/js/lastfm/noimg_ama.gif";
+					if(image==null || image=="") image = "https://"+locationHost+"/js/lastfm/noimg_ama.gif";
 					thisPage.append(
 						'<a href="'+decodeURIComponent(url)+'" title="'+artistName+'" target="_blank">'
 						+'<img src="'+image+'" class="widget-img-thumb" alt="'+artistName+'" />'
@@ -188,7 +188,7 @@
 			}
 		}
 		var thisElem = $(this);
-		thisElem.children('.ainfo').empty().append('<img src="http://'+locationHost+'/js/lastfm/indi.gif" alt="商品検索中..." width="10" height="10" /> 商品検索中...');
+		thisElem.children('.ainfo').empty().append('<img src="https://'+locationHost+'/js/lastfm/indi.gif" alt="商品検索中..." width="10" height="10" /> 商品検索中...');
 		var params = {
 			'search_index': 'Music'
 			,'artist': artistTitles[trackNum][0]
@@ -196,7 +196,7 @@
 			,'item_page': pageNum
 		};
 		$.ajax({
-			url: 'http://'+locationHost+'/amazon/request.php'
+			url: 'https://'+locationHost+'/amazon/request.php'
 			,data: params
 			,dataType: 'jsonp'
 			,callback: 'callback'
