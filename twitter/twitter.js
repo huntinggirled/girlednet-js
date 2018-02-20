@@ -30,20 +30,23 @@
 					stripSlashes: function(str) {
 						return (str+'').replace(/\0/g, '0').replace(/\\([\\'"])/g, '$1');
 					}
-					,replaceLink: function(str) {
+					,replaceLink: function(str, urls) {
 						var substr;
-						var match = str.match(/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-.\/?%&=~#]*)?/ig)
-						if(match){
-							for(var i = 0; i < match.length; ++i){
-								substr = '<a href="' + match[i] + '" target="_blank">' + match[i] + '</a>';
-								str = str.replace(match[i], substr);
-							}
+						var match = str.match(/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-.\/?%&=~#]*)?/ig);
+						for(var i = 0; match && i < match.length; ++i) {
+							substr = '<a href="' + match[i] + '" target="_blank">' + match[i] + '</a>';
+							for(var j = 0; urls && j < urls.length; ++j) {
+								if(match[i]==urls[j].url) {
+									substr = '<a href="' + match[i] + '" target="_blank" title="' + urls[j].expanded_url + '">' + urls[j].display_url + '</a>';
+								}
+							};
+							str = str.replace(match[i], substr);
 						}
 						str = str.replace(/[#＃]([^\b\s]+)/gi, function(str, p1) {
-							return '<a href="http://twitter.com/search?q=%23'+encodeURI(p1)+'" target="_blank">#'+p1+'</a>';
+							return '<a href="https://twitter.com/search?q=%23'+encodeURI(p1)+'" target="_blank">#'+p1+'</a>';
 						});
 						str = str.replace(/[@＠]([^\b\s]+)/gi, function(str, p1) {
-							return '<a href="http://twitter.com/#!/'+encodeURI(p1)+'" target="_blank">@'+p1+'</a>';
+							return '<a href="https://twitter.com/#!/'+encodeURI(p1)+'" target="_blank">@'+p1+'</a>';
 						});
 						return str;
 					}
@@ -61,35 +64,35 @@
 				,utc_offset = item.utc_offset
 				,screen_name = (item.user.screen_name!=null)?item.user.screen_name:'screen_name'
 				,name = (item.user.name!=null)?item.user.name:'name'
-				,profile_image = (item.user.profile_image_url!=null)?utils.stripSlashes(item.user.profile_image_url):"http://"+locationHost+"/js/twitter/noimg.png"
+				,profile_image = (item.user.profile_image_url_https!=null)?utils.stripSlashes(item.user.profile_image_url_https):"https://"+locationHost+"/js/twitter/noimg.png"
 				,created_at = utils.relativeTime(item.created_at)
-				,tweet_text = utils.replaceLink(item.text)
+				,tweet_text = utils.replaceLink(item.text, item.entities.urls)
 				,datetime = utils.getDatetime(item.created_at)
 				;
 				if(item.retweeted_status!=null) {
 					screen_name = item.retweeted_status.user.screen_name
 					,name = item.retweeted_status.user.name
-					,profile_image = (item.retweeted_status.user.profile_image_url!=null)?utils.stripSlashes(item.retweeted_status.user.profile_image_url):"http://"+locationHost+"/js/twitter/noimg.png"
+					,profile_image = (item.retweeted_status.user.profile_image_url_https!=null)?utils.stripSlashes(item.retweeted_status.user.profile_image_url_https):"https://"+locationHost+"/js/twitter/noimg.png"
 					,created_at = utils.relativeTime(item.retweeted_status.created_at)
-					,tweet_text = utils.replaceLink(item.retweeted_status.text)
+					,tweet_text = utils.replaceLink(item.retweeted_status.text, item.entities.urls)
 					,datetime = utils.getDatetime(item.retweeted_status.created_at)
 					;
 				}
 				elem.append(
 					'<div class="one_tweet" style="clear:both;">'
-					+'<a href="http://twitter.com/#!/'+screen_name+'" target="_blank" title="@'+screen_name+'">'+name+'</a><br />'
-					+'<a href="http://twitter.com/#!/'+screen_name+'" target="_blank" title="@'+screen_name+'"><img src="'+profile_image+'" alt="'+name+'" class="widget-img-thumb" /></a>'
-					//+'<a href="http://twitter.com/#!/'+screen_name+'" target="_blank" title="@'+screen_name+'">'+name+'</a><br />'
+					+'<a href="https://twitter.com/#!/'+screen_name+'" target="_blank" title="@'+screen_name+'">'+name+'</a><br />'
+					+'<a href="https://twitter.com/#!/'+screen_name+'" target="_blank" title="@'+screen_name+'"><img src="'+profile_image+'" alt="'+name+'" class="widget-img-thumb" /></a>'
+					//+'<a href="https://twitter.com/#!/'+screen_name+'" target="_blank" title="@'+screen_name+'">'+name+'</a><br />'
 					//+'@'+screen_name+'<br /> '
 					+tweet_text
 					+' '
-					+'<a href="http://twitter.com/huntinggirled/status/'+id_str+'" target="_blank" class="ctime" data-datetime="'+datetime+'">'+created_at+'</a>'
+					+'<a href="https://twitter.com/huntinggirled/status/'+id_str+'" target="_blank" class="ctime" data-datetime="'+datetime+'">'+created_at+'</a>'
 					//+' '
 					+'<br />'
 					+'<div class="reply" style="text-align:right;opacity:0.2;">'
-					+'<a href="http://twitter.com/intent/tweet?in_reply_to='+id_str+'" target="_blank">返信</a> '
-					+'<a href="http://twitter.com/intent/retweet?tweet_id='+id_str+'" target="_blank">リツイート</a> '
-					+'<a href="http://twitter.com/intent/favorite?tweet_id='+id_str+'" target="_blank">お気に入り</a>'
+					+'<a href="https://twitter.com/intent/tweet?in_reply_to='+id_str+'" target="_blank">返信</a> '
+					+'<a href="https://twitter.com/intent/retweet?tweet_id='+id_str+'" target="_blank">リツイート</a> '
+					+'<a href="https://twitter.com/intent/favorite?tweet_id='+id_str+'" target="_blank">お気に入り</a>'
 					+'</div>'
 					+'</div>'
 				);
@@ -133,7 +136,7 @@
 			}
 			,eachThis: function(elem) {
 				var thisElem = elem;
-				$('#more_tweet').empty().append('<div style="text-align:right;"><img src="http://'+locationHost+'/js/twitter/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
+				$('#more_tweet').empty().append('<div style="text-align:right;"><img src="https://'+locationHost+'/js/twitter/indi.gif" alt="読み込み中..." width="10" height="10" /> 読み込み中...</div>');
 				if(page>=1 && items.length>=settings.page_count) eachfuncs.shiftItems(thisElem);
 				else {
 					var params = {
@@ -143,8 +146,8 @@
 						,include_rts: true
 					}
 					$.ajax({
-					//	url: 'http://api.twitter.com/1/statuses/user_timeline.json'
-						url: 'http://'+locationHost+'/js/twitter/twittergw.php'
+					//	url: 'https://api.twitter.com/1/statuses/user_timeline.json'
+						url: 'https://'+locationHost+'/js/twitter/twittergw.php'
 						,data: params
 						,dataType: 'jsonp'
 						,callback: 'twitterCallback'
@@ -158,6 +161,7 @@
 						eachfuncs.shiftItems(thisElem);
 					})
 					.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log("NG:" + textStatus.status);
 						eachfuncs.elapsedTime(thisElem);
 						$('#more_tweet').empty();
 					})
