@@ -45,7 +45,7 @@
 						str = str.replace(/[#＃]([^\b\s]+)/gi, function(str, p1) {
 							return '<a href="https://twitter.com/search?q=%23'+encodeURI(p1)+'" target="_blank">#'+p1+'</a>';
 						});
-						str = str.replace(/[@＠]([^\b\s]+)/gi, function(str, p1) {
+						str = str.replace(/[@＠]([0-9a-zA-Z_]{1,15})/gi, function(str, p1) {
 							return '<a href="https://twitter.com/#!/'+encodeURI(p1)+'" target="_blank">@'+p1+'</a>';
 						});
 						return str;
@@ -143,6 +143,7 @@
 						screen_name: settings.screen_name
 						,count: (page==0)?settings.default_count:settings.read_count
 						,page: (page==0)?++page:page++
+						,exclude_replies: false
 						,include_rts: true
 					}
 					$.ajax({
